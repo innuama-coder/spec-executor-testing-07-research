@@ -1,0 +1,16 @@
+version: "2.0"
+name: "technology-research-jsonl-source"
+repo:
+  url: "https://github.com/innuama-coder/spec-executor-testing-07-research.git"
+  branch: "main"
+task_dir: "tasks/technology-research"
+executor: "codex"
+deliverables:
+  - path: "reports/jsonl-source-research.md"
+    verify: "test -s reports/jsonl-source-research.md && grep -q \"JSONL\" reports/jsonl-source-research.md && grep -q \"修订\" reports/jsonl-source-research.md && grep -q \"证据\" reports/jsonl-source-research.md && grep -q \"参考\" reports/jsonl-source-research.md && grep -q \"风险\" reports/jsonl-source-research.md"
+execution:
+  poll_interval_sec: 2
+  idle_timeout_sec: 90
+  max_duration_min: 15
+  max_nudge_count: 3
+  max_consecutive_escalate: 2
