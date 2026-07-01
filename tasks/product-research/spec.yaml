@@ -1,16 +1,84 @@
-version: "2.0"
+version: "2.3"
 name: "product-research-positioning"
 repo:
   url: "https://github.com/innuama-coder/spec-executor-testing-07-research.git"
   branch: "main"
 task_dir: "tasks/product-research"
 executor: "claude"
-deliverables:
-  - path: "reports/product-positioning.md"
-    verify: "test -s reports/product-positioning.md && grep -q \"修订\" reports/product-positioning.md && grep -q \"证据\" reports/product-positioning.md && grep -q \"参考\" reports/product-positioning.md && grep -q \"风险\" reports/product-positioning.md"
 execution:
   poll_interval_sec: 2
   idle_timeout_sec: 90
   max_duration_min: 15
   max_nudge_count: 3
   max_consecutive_escalate: 2
+  env:
+    file: "ENV"
+    required: false
+    privacy: "redacted"
+  agent:
+    id: "product-research-agent"
+    name: "product-research-agent"
+    role: "完成产品定位研究报告，保证结论、证据、风险和参考来源完整。"
+    model:
+      preference: "default"
+    instructions:
+      - "Claude 文档型 Agent、review item 状态、同一 JOB 迭代。"
+      - "严格遵守任务包中的 PROMPT、AGENTS、CLAUDE 与 docs 上下文。"
+      - "ENV 仅用于进程环境注入，不得作为上下文文件读取或在默认输出中泄漏变量值。"
+      - "若存在 review items，必须在同一 JOB 内完成修复、验证和交付说明更新。"
+    context:
+      files:
+        - "PROMPT.md"
+        - "AGENTS.md"
+        - "CLAUDE.md"
+      exclude:
+        - "ENV"
+    tools:
+      allow:
+        - "shell"
+        - "apply_patch"
+      deny:
+        - "network"
+    permissions:
+      filesystem: "workspace-write"
+      network: "deny"
+      approval: "on-request"
+  review:
+    max_iterations: 2
+    items:
+      - id: "REV-RESEARCH-001"
+        source: "external-review"
+        severity: "must"
+        target: "reports/product-positioning.md"
+        description: "报告必须包含证据和风险章节。"
+        expected_fix: "补齐证据、风险、参考来源，并保持修订记录。"
+        evidence_refs:
+          - "PROMPT.md"
+        acceptance:
+          command: "grep -q \"证据\" reports/product-positioning.md && grep -q \"风险\" reports/product-positioning.md"
+  lifecycle:
+    resume:
+      require_same_job: true
+    monitoring:
+      busy_side_effect: "observe_only"
+      source_degraded_policy: "bounded_failure"
+      screen_capture_semantic_fallback: false
+    capture:
+      default_raw_output: false
+      failure_evidence: true
+verification:
+  pass_threshold: 1
+  commands:
+    - "test -s reports/product-positioning.md"
+    - "grep -q \"修订\" reports/product-positioning.md"
+    - "grep -q \"证据\" reports/product-positioning.md"
+    - "grep -q \"参考\" reports/product-positioning.md"
+    - "grep -q \"风险\" reports/product-positioning.md"
+reporting:
+  format: "markdown"
+  include_evidence_refs: true
+  redact_env_values: true
+  include_handoff: true
+deliverables:
+  - path: "reports/product-positioning.md"
+    verify: "test -s reports/product-positioning.md && grep -q \"修订\" reports/product-positioning.md && grep -q \"证据\" reports/product-positioning.md && grep -q \"参考\" reports/product-positioning.md && grep -q \"风险\" reports/product-positioning.md"
