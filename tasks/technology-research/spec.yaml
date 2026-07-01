@@ -4,82 +4,66 @@ repo:
   url: "https://github.com/innuama-coder/spec-executor-testing-07-research.git"
   branch: "main"
 task_dir: "tasks/technology-research"
-executor: "codex"
+deliverables:
+- path: "reports/jsonl-source-research.md"
+  verify: "test -s reports/jsonl-source-research.md && grep -q \"JSONL\" reports/jsonl-source-research.md
+    && grep -q \"修订\" reports/jsonl-source-research.md && grep -q \"证据\" reports/jsonl-source-research.md
+    && grep -q \"参考\" reports/jsonl-source-research.md && grep -q \"风险\" reports/jsonl-source-research.md"
 execution:
+  executor: "codex"
   poll_interval_sec: 2
   idle_timeout_sec: 90
-  max_duration_min: 15
-  max_nudge_count: 3
   max_consecutive_escalate: 2
-  env:
-    file: "ENV"
-    required: false
-    privacy: "redacted"
   agent:
-    id: "technology-research-agent"
     name: "technology-research-agent"
     role: "完成 JSONL source 技术研究报告，关注 log-first detection 证据链。"
-    model:
-      preference: "default"
     instructions:
-      - "log-first/source degraded 语义、Codex 文档型 Agent。"
-      - "严格遵守任务包中的 PROMPT、AGENTS、CLAUDE 与 docs 上下文。"
-      - "ENV 仅用于进程环境注入，不得作为上下文文件读取或在默认输出中泄漏变量值。"
-      - "若存在 review items，必须在同一 JOB 内完成修复、验证和交付说明更新。"
+      primary: PROMPT.md
+      system: AGENTS.md
+      additional:
+      - "CLAUDE.md"
     context:
-      files:
-        - "PROMPT.md"
-        - "AGENTS.md"
-        - "CLAUDE.md"
-      exclude:
-        - "ENV"
+    - path: "PROMPT.md"
+      required: true
+    - path: "AGENTS.md"
+      required: true
+    - path: "CLAUDE.md"
+      required: true
     tools:
       allow:
-        - "shell"
-        - "apply_patch"
+      - "shell"
+      - "apply_patch"
       deny:
-        - "network"
+      - "network"
     permissions:
-      filesystem: "workspace-write"
-      network: "deny"
+      sandbox: "workspace-write"
       approval: "on-request"
+      network: false
+    model:
+      preferred: "default"
   review:
     max_iterations: 2
     items:
-      - id: "REV-TECH-001"
-        source: "external-review"
-        severity: "must"
-        target: "reports/jsonl-source-research.md"
-        description: "报告必须说明 JSONL source 与 screen capture 的职责边界。"
-        expected_fix: "明确 JSONL 是语义主来源，screen capture 只作为显式查看或失败证据。"
-        evidence_refs:
-          - "PROMPT.md"
-        acceptance:
-          command: "grep -q \"JSONL\" reports/jsonl-source-research.md && grep -q \"screen\" reports/jsonl-source-research.md"
-  lifecycle:
-    resume:
-      require_same_job: true
-    monitoring:
-      busy_side_effect: "observe_only"
-      source_degraded_policy: "bounded_failure"
-      screen_capture_semantic_fallback: false
-    capture:
-      default_raw_output: false
-      failure_evidence: true
+    - id: "REV-TECH-001"
+      source: "external-review"
+      severity: "must"
+      target: "reports/jsonl-source-research.md"
+      issue: "报告必须说明 JSONL source 与 screen capture 的职责边界。"
+      expected_fix: "明确 JSONL 是语义主来源，screen capture 只作为显式查看或失败证据。"
+      acceptance: "grep -q \"JSONL\" reports/jsonl-source-research.md && grep -q \"\
+        screen\" reports/jsonl-source-research.md"
 verification:
-  pass_threshold: 1
   commands:
-    - "test -s reports/jsonl-source-research.md"
-    - "grep -q \"JSONL\" reports/jsonl-source-research.md"
-    - "grep -q \"修订\" reports/jsonl-source-research.md"
-    - "grep -q \"证据\" reports/jsonl-source-research.md"
-    - "grep -q \"参考\" reports/jsonl-source-research.md"
-    - "grep -q \"风险\" reports/jsonl-source-research.md"
+  - "test -s reports/jsonl-source-research.md"
+  - "grep -q \"JSONL\" reports/jsonl-source-research.md"
+  - "grep -q \"修订\" reports/jsonl-source-research.md"
+  - "grep -q \"证据\" reports/jsonl-source-research.md"
+  - "grep -q \"参考\" reports/jsonl-source-research.md"
+  - "grep -q \"风险\" reports/jsonl-source-research.md"
 reporting:
-  format: "markdown"
   include_evidence_refs: true
-  redact_env_values: true
-  include_handoff: true
-deliverables:
-  - path: "reports/jsonl-source-research.md"
-    verify: "test -s reports/jsonl-source-research.md && grep -q \"JSONL\" reports/jsonl-source-research.md && grep -q \"修订\" reports/jsonl-source-research.md && grep -q \"证据\" reports/jsonl-source-research.md && grep -q \"参考\" reports/jsonl-source-research.md && grep -q \"风险\" reports/jsonl-source-research.md"
+  handoff_required: true
+package:
+  env:
+    path: "ENV"
+    required: false
