@@ -1,0 +1,87 @@
+{
+  "deliverables": {
+    "aggregate": {
+      "failed": 0,
+      "passed": 1,
+      "total": 1,
+      "total_duration_ms": 18,
+      "verify_executed": 1,
+      "verify_passed": 1,
+      "warning_items": 0
+    },
+    "finished_at": "2026-07-02T02:39:45.657578+00:00",
+    "items": [
+      {
+        "duration_ms": 18,
+        "existence": "present_file",
+        "existence_detail": null,
+        "failure_detail": null,
+        "failure_reason": null,
+        "passed": true,
+        "path": "reports/product-positioning.md",
+        "verify_command": "test -s reports/product-positioning.md && grep -q \"修订\" reports/product-positioning.md && grep -q \"证据\" reports/product-positioning.md && grep -q \"参考\" reports/product-positioning.md && grep -q \"风险\" reports/product-positioning.md",
+        "verify_duration_ms": 18,
+        "verify_exit_code": 0,
+        "verify_signal": null,
+        "verify_stderr_tail": "",
+        "verify_stdout_tail": "",
+        "verify_timed_out": false,
+        "warnings": []
+      }
+    ],
+    "not_run_reason": null,
+    "started_at": "2026-07-02T02:39:45.639333+00:00",
+    "verification": "ran"
+  },
+  "generated_at": "2026-07-02T02:39:45.633588+00:00",
+  "merging": {
+    "attempted": false,
+    "base_branch": null,
+    "conflict": null,
+    "merge_commit_sha": null,
+    "merged_at": null,
+    "push_detail": null,
+    "push_status": "not_attempted",
+    "pushed": false,
+    "result": "skipped",
+    "skip_reason": "skipped",
+    "source_branch": "spec-exec/product-research-positioning-9DSVV6"
+  },
+  "metadata": {
+    "duration_ms": 220239,
+    "executor": "claude",
+    "finished_at": "2026-07-02T02:39:45.633588+00:00",
+    "log_dir": "/Users/royzuo/spec-e2e-v23/logs-product/product-research-positioning-9DSVV6",
+    "mode": "worktree",
+    "repo_branch_base": "main",
+    "repo_branch_worktree": "spec-exec/product-research-positioning-9DSVV6",
+    "repo_url": "https://github.com/innuama-coder/spec-executor-testing-07-research.git",
+    "session_id": "product-research-positioning-9DSVV6",
+    "started_at": "2026-07-02T02:36:05.393657+00:00",
+    "task_name": "product-research-positioning",
+    "worktree_path": "/Users/royzuo/spec-e2e-v23/.spec-executor-worktrees/product-research-positioning-9DSVV6"
+  },
+  "monitoring": {
+    "consecutive_escalate": 0,
+    "decision_done": 1,
+    "decision_escalate_normalized": 0,
+    "decision_fallback_used": 0,
+    "decision_nudge": 0,
+    "decision_timeout": 0,
+    "decision_total": 1,
+    "idle_timeout_hits": 1,
+    "last_decision_action": "done",
+    "last_decision_text": "Churned for 3m3s; report with evidence markers, blockers, revision log complete; idle",
+    "monitoring_finished_at": "2026-07-02T02:39:45.633588+00:00",
+    "monitoring_started_at": "2026-07-02T02:36:24.974175+00:00",
+    "nudge_count": 0,
+    "poll_count": 24
+  },
+  "schema_version": "spec-executor-report/2.0",
+  "spec_executor_version": "2.2.7",
+  "status": {
+    "failure_category": null,
+    "failure_detail": null,
+    "result": "passed"
+  }
+}
